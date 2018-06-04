@@ -354,7 +354,7 @@ class GooglePlaces(object):
         return GooglePlacesSearchResult(self, places_response)
 
     def autocomplete(self, input, lat_lng=None, location=None, radius=3200,
-                     language=lang.ENGLISH, types=None, components=[]):
+                     language=lang.ENGLISH, types=None, components=[], strictbounds=None):
         """
         Perform an autocomplete search using the Google Places API.
 
@@ -362,31 +362,36 @@ class GooglePlaces(object):
         are optional.
 
         keyword arguments:
-        input    -- The text string on which to search, for example:
-                    "Hattie B's".
-        lat_lng  -- A dict containing the following keys: lat, lng
-                    (default None)
-        location -- A human readable location, e.g 'London, England'
-                    (default None)
-        radius   -- The radius (in meters) around the location to which the
-                    search is to be restricted. The maximum is 50000 meters.
-                    (default 3200)
-        language -- The language code, indicating in which language the
-                    results should be returned, if possible. (default lang.ENGLISH)
-        types    -- A type to search against. See `types.py` "autocomplete types"
-                    for complete list
-                    https://developers.google.com/places/documentation/autocomplete#place_types.
-        components -- An optional grouping of places to which you would
-                    like to restrict your results. An array containing one or
-                    more tuples of:
-                    * country: matches a country name or a two letter ISO 3166-1 country code.
-                    eg: [('country','US')]
+        input        -- The text string on which to search, for example:
+                        "Hattie B's".
+        lat_lng      -- A dict containing the following keys: lat, lng
+                        (default None)
+        location     -- A human readable location, e.g 'London, England'
+                        (default None)
+        radius       -- The radius (in meters) around the location to which the
+                        search is to be restricted. The maximum is 50000 meters.
+                        (default 3200)
+        strictbounds -- Returns only those places that are strictly within the region defined by 
+                        location and radius. This is a restriction, rather than a bias, meaning that 
+                        results outside this region will not be returned even if they match the user input
+        language     -- The language code, indicating in which language the
+                        results should be returned, if possible. (default lang.ENGLISH)
+        types        -- A type to search against. See `types.py` "autocomplete types"
+                        for complete list
+                        https://developers.google.com/places/documentation/autocomplete#place_types.
+        components   -- An optional grouping of places to which you would
+                        like to restrict your results. An array containing one or
+                        more tuples of:
+                        * country: matches a country name or a two letter ISO 3166-1 country code.
+                        eg: [('country','US')]
         """
         self._request_params = {'input': input}
         if lat_lng is not None or location is not None:
             lat_lng_str = self._generate_lat_lng_string(lat_lng, location)
             self._request_params['location'] = lat_lng_str
         self._request_params['radius'] = radius
+        if strictbounds:
+            self._request_params['strictbounds'] = 'true'
         if types:
             self._request_params['types'] = types
         if len(components) > 0:
