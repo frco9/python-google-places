@@ -201,6 +201,10 @@ Reference
                         search is to be restricted. The maximum is 50000 meters.
                         (default 3200)
 
+            strictbounds -- Returns only those places that are strictly within the region defined by 
+                            location and radius. This is a restriction, rather than a bias, meaning that 
+                            results outside this region will not be returned even if they match the user input
+
             language -- The language code, indicating in which language the
                         results should be returned, if possible. (default lang.ENGLISH)
 
